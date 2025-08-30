@@ -6,7 +6,9 @@
 #include <cstring>
 #endif
 
-size_t WriteCallback(char* contents, size_t size, size_t nmemb, void* userp)
+#include <CurlRequest.h>
+
+/*size_t WriteCallback(char* contents, size_t size, size_t nmemb, void* userp)
 {
 	((std::string*)userp)->append((char*)contents, size * nmemb);
 	return size * nmemb;
@@ -37,8 +39,28 @@ std::string getRandomWord()
 	}
 
 	return "Error";
+	exit(1);
+}*/
 
+std::string getRandomWord()
+{
+	CurlRequest req("https://random-word-api.vercel.app/api?words=1&length=5");
+	std::string strResult;
+
+	if (req.getResultCode() == CURLcode::CURLE_OK)
+	{
+		req.perform();
+
+		if (req.getSuccess())
+		{
+			return req.getBuffer().substr(2, 5);
+		}
+	}
+
+	return strResult;
 }
+
+CurlInstance* CurlInstance::_curlInstance = nullptr;
 
 int main()
 {
@@ -48,7 +70,6 @@ int main()
 
 	std::string strWord = getRandomWord();
 
-	//const char strWord[] = getRandomWord();
 	const int nRounds = 6;
 	const int nCharacters = 5;
 
