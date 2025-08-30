@@ -63,8 +63,12 @@ elseif (LINUX)
 endif()
 
 add_subdirectory(curl_helpers)
+add_subdirectory(game)
 
-set(LINK_LIBS_COMMON miniaudio nlohmann_json::nlohmann_json curl_helpers)
+set(LINK_LIBS_COMMON 
+		curl_helpers game
+		miniaudio nlohmann_json::nlohmann_json)
+
 list(APPEND LINK_LIBS ${LINK_LIBS_COMMON} ${CURSES})
 target_link_libraries(wordle ${LINK_LIBS})
 

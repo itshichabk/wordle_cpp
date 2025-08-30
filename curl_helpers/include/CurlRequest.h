@@ -1,3 +1,5 @@
+#pragma once
+
 #include "CurlInstance.h"
 #include <string>
 
@@ -14,6 +16,7 @@ private:
 
 public:
 	CurlRequest(std::string strUrl);
+	~CurlRequest();
 
 	std::string getUrl() const;
 	std::string getBuffer() const;

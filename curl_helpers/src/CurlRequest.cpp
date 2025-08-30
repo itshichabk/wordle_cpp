@@ -1,4 +1,5 @@
 #include "CurlRequest.h"
+#include "CurlRequest.h"
 
 CurlRequest::CurlRequest(std::string strUrl)
 {
@@ -17,6 +18,21 @@ CurlRequest::CurlRequest(std::string strUrl)
 		curl_easy_setopt(_curlInstance->getCurl(), CURLOPT_WRITEDATA, &_strBuffer);
 
 		_resultCode = CURLcode::CURLE_OK;
+	}
+}
+
+CurlRequest::~CurlRequest()
+{
+	_strUrl = "";
+	_strBuffer = "";
+	_bSuccess = false;
+	_resultCode = CURLcode::CURLE_OK;
+
+	if (_curlInstance->getInitSuccess())
+	{
+		curl_easy_setopt(_curlInstance->getCurl(), CURLOPT_URL, nullptr);
+		curl_easy_setopt(_curlInstance->getCurl(), CURLOPT_WRITEFUNCTION, nullptr);
+		curl_easy_setopt(_curlInstance->getCurl(), CURLOPT_WRITEDATA, nullptr);
 	}
 }
 
