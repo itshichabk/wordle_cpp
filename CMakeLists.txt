@@ -1,7 +1,10 @@
 ﻿# CMakeList.txt : projet CMake pour wordle, incluez la source et définissez
 # la logique spécifique au projet ici.
 #
-cmake_minimum_required (VERSION 3.15)
+cmake_minimum_required (VERSION 3.20)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Activez Rechargement à chaud pour les compilateurs MSVC si cela est pris en charge.
 if (POLICY CMP0141)
@@ -36,7 +39,13 @@ FetchContent_Declare(
 	GIT_TAG        743ba4cf0f14c3f416934b11e3c22702068d260b
 )
 
-FetchContent_MakeAvailable(miniaudio nlohmann_json)
+FetchContent_Declare(
+	googletest
+	URL https://github.com/google/googletest/archive/52eb8108c5bdec04579160ae17225d66034bd723.zip
+)
+
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(miniaudio nlohmann_json googletest)
 
 set(CURSES_WIN   pdcurses)
 set(CURSES_LINUX ncursesw)
@@ -61,6 +70,8 @@ elseif (LINUX)
 	include_directories(${CURSES_INCLUDE_DIR}})
 
 endif()
+
+enable_testing()
 
 add_subdirectory(curl_helpers)
 add_subdirectory(game)

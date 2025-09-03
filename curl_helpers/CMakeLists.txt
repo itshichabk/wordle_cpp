@@ -1,6 +1,4 @@
-cmake_minimum_required (VERSION 3.15)
-
-add_library(curl_helpers STATIC "src/CurlInstance.cpp" "src/CurlRequest.cpp")
+add_library(curl_helpers STATIC "src/CurlRequest.cpp")
 
 if (WIN32)
 	FetchContent_Declare(
@@ -28,4 +26,6 @@ else()
 endif()
 
 target_include_directories(curl_helpers PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(curl_helpers ${CURL_LIBRARIES})
+target_link_libraries(curl_helpers ${CURL_LIBRARIES} GTest::gtest GTest::gtest_main)
+
+add_subdirectory(tests)

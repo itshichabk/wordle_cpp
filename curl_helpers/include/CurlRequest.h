@@ -1,12 +1,12 @@
 #pragma once
 
-#include "CurlInstance.h"
+#include <curl/curl.h>
 #include <string>
 
 class CurlRequest
 {
 private:
-	CurlInstance* _curlInstance;
+	CURL* _curl;
 
 	std::string _strUrl;
 	std::string _strBuffer;

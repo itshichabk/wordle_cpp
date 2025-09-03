@@ -1,39 +1,36 @@
 #include "CurlRequest.h"
-#include "CurlRequest.h"
 
 CurlRequest::CurlRequest(std::string strUrl)
 {
-	_curlInstance = CurlInstance::getInstance();
+	_curl = curl_easy_init();
+
+	if (_curl)
+	{
+		curl_easy_setopt(_curl, CURLOPT_URL, strUrl.c_str());
+		curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+		curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &_strBuffer);
+
+		_resultCode = CURLcode::CURLE_OK;
+	}
+	else
+	{
+		_resultCode = CURLcode::CURLE_FAILED_INIT;
+	}
 
 	setUrl(strUrl);
 
 	_strBuffer = "";
 	_bSuccess = false;
-	_resultCode = CURLcode::CURLE_FAILED_INIT;
-
-	if (_curlInstance->getInitSuccess())
-	{
-		curl_easy_setopt(_curlInstance->getCurl(), CURLOPT_URL, strUrl.c_str());
-		curl_easy_setopt(_curlInstance->getCurl(), CURLOPT_WRITEFUNCTION, WriteCallback);
-		curl_easy_setopt(_curlInstance->getCurl(), CURLOPT_WRITEDATA, &_strBuffer);
-
-		_resultCode = CURLcode::CURLE_OK;
-	}
 }
 
 CurlRequest::~CurlRequest()
 {
+	curl_easy_cleanup(_curl);
+	_curl = nullptr;
+
 	_strUrl = "";
 	_strBuffer = "";
 	_bSuccess = false;
-	_resultCode = CURLcode::CURLE_OK;
-
-	if (_curlInstance->getInitSuccess())
-	{
-		curl_easy_setopt(_curlInstance->getCurl(), CURLOPT_URL, nullptr);
-		curl_easy_setopt(_curlInstance->getCurl(), CURLOPT_WRITEFUNCTION, nullptr);
-		curl_easy_setopt(_curlInstance->getCurl(), CURLOPT_WRITEDATA, nullptr);
-	}
 }
 
 std::string CurlRequest::getUrl() const
@@ -69,9 +66,9 @@ bool CurlRequest::perform()
 
 	bool bResult = false;
 
-	if (_curlInstance->getInitSuccess())
+	if (_curl)
 	{
-		_resultCode = curl_easy_perform(_curlInstance->getCurl());
+		_resultCode = curl_easy_perform(_curl);
 		
 		if (_resultCode == CURLE_OK)
 		{
