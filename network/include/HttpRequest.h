@@ -3,7 +3,7 @@
 #include <curl/curl.h>
 #include <string>
 
-class CurlRequest
+class HttpRequest
 {
 private:
 	CURL* _curl;
@@ -15,8 +15,8 @@ private:
 	CURLcode _resultCode;
 
 public:
-	CurlRequest(std::string strUrl);
-	~CurlRequest();
+	HttpRequest(std::string strUrl);
+	~HttpRequest();
 
 	std::string getUrl() const;
 	std::string getBuffer() const;

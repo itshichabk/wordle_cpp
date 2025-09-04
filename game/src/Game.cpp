@@ -26,7 +26,7 @@ Game::~Game()
 
 void Game::getRandomWord()
 {
-	CurlRequest req("https://random-word-api.vercel.app/api?words=1&length=5");
+	HttpRequest req("https://random-word-api.vercel.app/api?words=1&length=5");
 
 	if (req.getResultCode() == CURLcode::CURLE_OK)
 	{

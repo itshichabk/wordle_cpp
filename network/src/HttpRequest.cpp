@@ -1,6 +1,6 @@
-#include "CurlRequest.h"
+#include "HttpRequest.h"
 
-CurlRequest::CurlRequest(std::string strUrl)
+HttpRequest::HttpRequest(std::string strUrl)
 {
 	_curl = curl_easy_init();
 
@@ -23,7 +23,7 @@ CurlRequest::CurlRequest(std::string strUrl)
 	_bSuccess = false;
 }
 
-CurlRequest::~CurlRequest()
+HttpRequest::~HttpRequest()
 {
 	curl_easy_cleanup(_curl);
 	_curl = nullptr;
@@ -33,33 +33,33 @@ CurlRequest::~CurlRequest()
 	_bSuccess = false;
 }
 
-std::string CurlRequest::getUrl() const
+std::string HttpRequest::getUrl() const
 {
 	return _strUrl;
 }
 
-std::string CurlRequest::getBuffer() const
+std::string HttpRequest::getBuffer() const
 {
 	return _strBuffer;
 }
 
-bool CurlRequest::getSuccess() const
+bool HttpRequest::getSuccess() const
 {
 	return _bSuccess;
 }
 
-CURLcode CurlRequest::getResultCode() const
+CURLcode HttpRequest::getResultCode() const
 {
 	return _resultCode;
 }
 
-void CurlRequest::setUrl(std::string strUrl)
+void HttpRequest::setUrl(std::string strUrl)
 {
 	// add url validation?
 	_strUrl = strUrl;
 }
 
-bool CurlRequest::perform()
+bool HttpRequest::perform()
 {
 	_strBuffer = "";
 	_bSuccess = false;

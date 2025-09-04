@@ -73,11 +73,11 @@ endif()
 
 enable_testing()
 
-add_subdirectory(curl_helpers)
+add_subdirectory(network)
 add_subdirectory(game)
 
 set(LINK_LIBS_COMMON 
-		curl_helpers game
+		lib_network lib_game
 		miniaudio nlohmann_json::nlohmann_json)
 
 list(APPEND LINK_LIBS ${LINK_LIBS_COMMON} ${CURSES})

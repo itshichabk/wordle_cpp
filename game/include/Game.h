@@ -7,7 +7,7 @@
 #endif
 
 #include "Grid.h"
-#include "CurlRequest.h"
+#include "HttpRequest.h"
 
 class Game
 {

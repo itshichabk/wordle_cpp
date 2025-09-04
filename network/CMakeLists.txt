@@ -1,4 +1,4 @@
-add_library(curl_helpers STATIC "src/CurlRequest.cpp")
+add_library(lib_network STATIC "src/HttpRequest.cpp")
 
 if (WIN32)
 	FetchContent_Declare(
@@ -25,7 +25,7 @@ else()
 	include_directories(${CURL_INCLUDE_DIR})
 endif()
 
-target_include_directories(curl_helpers PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(curl_helpers ${CURL_LIBRARIES} GTest::gtest GTest::gtest_main)
+target_include_directories(lib_network PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(lib_network ${CURL_LIBRARIES} GTest::gtest GTest::gtest_main)
 
 add_subdirectory(tests)
