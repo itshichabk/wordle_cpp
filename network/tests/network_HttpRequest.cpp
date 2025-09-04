@@ -1,10 +1,5 @@
 #include <gtest/gtest.h>
-#include <locale>
 #include "HttpRequest.h"
-
-#ifdef _WIN32
-#include <Windows.h>
-#endif
 
 TEST(network, HttpRequest_SimpleRequest)
 {
