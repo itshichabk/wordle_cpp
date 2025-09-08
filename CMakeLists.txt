@@ -19,7 +19,7 @@ project ("wordle")
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
 # Ajoutez une source à l'exécutable de ce projet.
-add_executable (wordle "main.cpp")
+add_executable (wordle "main.cpp" "console/include/Console.h" "console/src/Console.cpp")
 
 FetchContent_Declare(
 	miniaudio
@@ -73,11 +73,12 @@ endif()
 
 enable_testing()
 
-add_subdirectory(network)
+add_subdirectory(console)
 add_subdirectory(game)
+add_subdirectory(network)
 
 set(LINK_LIBS_COMMON 
-		lib_network lib_game
+		lib_console lib_game lib_network
 		miniaudio nlohmann_json::nlohmann_json)
 
 list(APPEND LINK_LIBS ${LINK_LIBS_COMMON} ${CURSES})

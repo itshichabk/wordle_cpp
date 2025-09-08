@@ -1,6 +1,7 @@
 #pragma once
 
 #include <curses.h>
+#include "Window.h"
 
 class Grid
 {
@@ -16,8 +17,10 @@ private:
 	int** _pnGrid;
 
 public:
-	Grid();
+	Grid(Window* win);
 	~Grid();
+
+	Window* _pWin;
 
 	void print() const;
 	bool isRowCorrect(int nRow) const;

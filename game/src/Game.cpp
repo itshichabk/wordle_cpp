@@ -1,16 +1,18 @@
 #include "Game.h"
 
-const int Game::nRounds     = 6;
-const int Game::nCharacters = 5;
-const std::string Game::strWordUrl = "https://random-word-api.vercel.app/api?words=1&length=5";
+const int Game::nRounds     = GAME_ROUNDS;
+const int Game::nCharacters = GAME_CHARS;
+const std::string Game::strWordUrl = GAME_API_URL;
 
-Game::Game()
+Game::Game(Console* console) : 
+	_win(console, "Wordle", 20, 40, true),
+	_grid(&_win)
 {
-	_strInput = new char[nCharacters + 1];
-	_bHasWon = false;
-	_nCurrentRound = 0;
+	_colorPairIdx[0] = console->getColorPairIdx(COLOR_WHITE, COLOR_BLACK);
+	_colorPairIdx[1] = console->getColorPairIdx(COLOR_BLACK, COLOR_YELLOW);
+	_colorPairIdx[2] = console->getColorPairIdx(COLOR_BLACK, COLOR_GREEN);
 
-	initConsole();
+	init();
 }
 
 Game::~Game()
@@ -43,17 +45,17 @@ void Game::getInput()
 {
 	do
 	{
-		move(_nCurrentRound, 0);
+		_win.move(_nCurrentRound, 0);
 
 		for (int i = 0; i < nCharacters; i++)
 		{
-			addch('_');
+			_win.print("_");
 		}
 
-		refresh();
-		move(_nCurrentRound, 0);
+		_win.refresh();
+		_win.move(_nCurrentRound, 0);
 
-		getnstr(_strInput, nCharacters);
+		wgetnstr(_win.getWIN(), _strInput, nCharacters);
 	}
 	while (strlen(_strInput) != nCharacters);
 }
@@ -84,12 +86,23 @@ void Game::checkInput()
 
 void Game::colorInput()
 {
-	move(_nCurrentRound, 0);
+	_win.move(_nCurrentRound, 0);
 
 	for (int i = 0; i < nCharacters; i++)
 	{
-		addch(_strInput[i] | COLOR_PAIR(_grid[_nCurrentRound][i]));
+		int nValue = _grid[_nCurrentRound][i];
+
+		_win.printColor(_strInput[i], _colorPairIdx[nValue]);
 	}
+}
+
+void Game::init()
+{
+	_strInput = new char[nCharacters + 1];
+	_bHasWon = false;
+	_nCurrentRound = 0;
+
+	//initConsole();
 }
 
 void Game::initConsole()
@@ -109,7 +122,7 @@ void Game::play()
 
 	if (_strWord.empty())
 	{
-		printw("Error when fetching random word. The game cannot continue.");
+		_win.printColor("Error when fetching random word. The game cannot continue.", COLOR_BLACK, COLOR_RED);
 	}
 	else
 	{
@@ -139,24 +152,27 @@ void Game::playRound()
 	colorInput();
 }
 
-void Game::result() const
+void Game::result()
 {
-	std::string strMessage;
+	curs_set(0);
+	std::string strMsg;
 
 	if (_bHasWon)
 	{
-		strMessage = "You won!!!!";
+		strMsg = "You won!!!!";
 		flash();
 	}
 	else
 	{
-		strMessage = "You lost... the word was " + _strWord;
+		strMsg = "You lost... the word was " + _strWord;
 	}
 
-	move(24, 0);
+	_win.print(strMsg, _win.getHeight() - 1, 0);
+
+	/*move(24, 0);
 
 	printw("%s", strMessage.c_str());
-	refresh();
+	refresh();*/
 }
 
 std::string Game::getWord() const

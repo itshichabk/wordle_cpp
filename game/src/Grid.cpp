@@ -1,7 +1,11 @@
+#include "Window.h"
+#include "Grid.h"
 #include "Game.h"
 
-Grid::Grid()
+Grid::Grid(Window* win)
 {
+	_pWin = win;
+
 	_pnGrid = new int* [Game::nRounds];
 
 	for (int i = 0; i < Game::nRounds; i++)
@@ -29,11 +33,11 @@ void Grid::print() const
 {
 	for (int i = 0; i < Game::nRounds; i++)
 	{
-		move(i, 0);
+		_pWin->move(i, 0);
 
 		for (int j = 0; j < Game::nCharacters; j++)
 		{
-			addch('_');
+			_pWin->print("_");
 		}
 
 		refresh();
