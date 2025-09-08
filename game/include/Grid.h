@@ -15,15 +15,19 @@ public:
 
 private:
 	int** _pnGrid;
+	Window* _pWin;
+
+	int _colorPairIdx[3];
 
 public:
 	Grid(Window* win);
 	~Grid();
 
-	Window* _pWin;
-
-	void print() const;
-	bool isRowCorrect(int nRow) const;
+	void print();
+	void printRow(int nRow);
+	void printInputColor(std::string strWord, int nRow);
+	void moveToRow(int nRow);
+	bool isRowCorrect(int nRow);
 
 	int* operator[](int nRow);
 };

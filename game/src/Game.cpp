@@ -5,13 +5,9 @@ const int Game::nCharacters = GAME_CHARS;
 const std::string Game::strWordUrl = GAME_API_URL;
 
 Game::Game(Console* console) : 
-	_win(console, "Wordle", 20, 40, true),
+	_win(console, "Wordle", GAME_ROUNDS + 3, 50, true),
 	_grid(&_win)
 {
-	_colorPairIdx[0] = console->getColorPairIdx(COLOR_WHITE, COLOR_BLACK);
-	_colorPairIdx[1] = console->getColorPairIdx(COLOR_BLACK, COLOR_YELLOW);
-	_colorPairIdx[2] = console->getColorPairIdx(COLOR_BLACK, COLOR_GREEN);
-
 	init();
 }
 
@@ -43,19 +39,16 @@ void Game::getRandomWord()
 
 void Game::getInput()
 {
+	_grid.moveToRow(_nCurrentRound);
+
 	do
 	{
-		_win.move(_nCurrentRound, 0);
-
-		for (int i = 0; i < nCharacters; i++)
-		{
-			_win.print("_");
-		}
-
-		_win.refresh();
-		_win.move(_nCurrentRound, 0);
-
 		wgetnstr(_win.getWIN(), _strInput, nCharacters);
+
+		if (strlen(_strInput) != nCharacters)
+		{
+			_grid.printRow(_nCurrentRound);
+		}
 	}
 	while (strlen(_strInput) != nCharacters);
 }
@@ -84,36 +77,11 @@ void Game::checkInput()
 	_bHasWon = _grid.isRowCorrect(_nCurrentRound);
 }
 
-void Game::colorInput()
-{
-	_win.move(_nCurrentRound, 0);
-
-	for (int i = 0; i < nCharacters; i++)
-	{
-		int nValue = _grid[_nCurrentRound][i];
-
-		_win.printColor(_strInput[i], _colorPairIdx[nValue]);
-	}
-}
-
 void Game::init()
 {
 	_strInput = new char[nCharacters + 1];
 	_bHasWon = false;
 	_nCurrentRound = 0;
-
-	//initConsole();
-}
-
-void Game::initConsole()
-{
-	initscr();
-	start_color();
-	resize_term(25, 80);
-
-	init_pair(Grid::INCORRECT,  COLOR_WHITE, COLOR_BLACK);
-	init_pair(Grid::WRONG_SPOT, COLOR_BLACK, COLOR_YELLOW);
-	init_pair(Grid::CORRECT,    COLOR_BLACK, COLOR_GREEN);
 }
 
 void Game::play()
@@ -122,7 +90,7 @@ void Game::play()
 
 	if (_strWord.empty())
 	{
-		_win.printColor("Error when fetching random word. The game cannot continue.", COLOR_BLACK, COLOR_RED);
+		_win.printColor("Error when fetching random word.\nThe game cannot continue.", COLOR_BLACK, COLOR_RED);
 	}
 	else
 	{
@@ -141,7 +109,7 @@ void Game::play()
 		result();
 	}
 
-	getch();
+	wgetch(_win.getWIN());
 }
 
 void Game::playRound()
@@ -149,7 +117,7 @@ void Game::playRound()
 	getInput();
 
 	checkInput();
-	colorInput();
+	_grid.printInputColor(_strInput, _nCurrentRound);
 }
 
 void Game::result()
@@ -157,22 +125,19 @@ void Game::result()
 	curs_set(0);
 	std::string strMsg;
 
+	_win.move(_win.getHeight() - 1, 0);
+
 	if (_bHasWon)
 	{
-		strMsg = "You won!!!!";
+		_win.printColor("You won!!!!", COLOR_WHITE, COLOR_GREEN, true, _win.getHeight() - 2);
 		flash();
 	}
 	else
 	{
-		strMsg = "You lost... the word was " + _strWord;
+		_win.print("You lost... the word was:", true, _win.getHeight() - 2);
+		_win.printColor(_strWord.c_str(), COLOR_WHITE, COLOR_RED, true, _win.getHeight() - 1);
 	}
 
-	_win.print(strMsg, _win.getHeight() - 1, 0);
-
-	/*move(24, 0);
-
-	printw("%s", strMessage.c_str());
-	refresh();*/
 }
 
 std::string Game::getWord() const

@@ -13,17 +13,14 @@ public:
 	static const int nCols;
 
 private:
-	//Window _winMain;
-	//std::vector<Window> _windows;
-
 	typedef struct colorPair
 	{
-		int bgColor;
 		int fgColor;
+		int bgColor;
 
 		bool operator<(const colorPair& c) const
 		{
-			return bgColor < c.bgColor || (bgColor == c.bgColor && fgColor < c.fgColor);
+			return fgColor < c.fgColor || (fgColor == c.fgColor && bgColor < c.bgColor);
 		}
 
 	} colorPair;

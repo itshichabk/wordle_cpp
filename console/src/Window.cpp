@@ -1,8 +1,4 @@
 #include "Window.h"
-#include "Window.h"
-#include "Window.h"
-#include "Window.h"
-#include "Window.h"
 
 Window::Window(Console* console, std::string title, int h, int w, bool isCentered, int x, int y)
 {
@@ -36,23 +32,18 @@ Window::Window(Console* console, std::string title, int h, int w, bool isCentere
 		x = (col - _w) / 2;
 	}
 
-	_win = newwin(h, w, y, x);
-	box(_win, 0, 0);
-}
+	if (title.empty())
+	{
+		_box = newwin(h + 2, w + 2, y - 1, x - 1);
+		_win = newwin(h, w, y, x);
+	}
+	else
+	{
+		_box = newwin(h + 3, w + 2, y - 2, x - 1);
+		_win = newwin(h, w, y, x);
+	}
 
-Window::Window(const Window& win)
-{
-	_w = win._w;
-	_h = win._h;
-	_title = win._title;
-	_x = win._x;
-	_y = win._y;
-
-	int x = win._x;
-	int y = win._y;
-
-	_win = newwin(win._h, win._w, y, x);
-	box(_win, 0, 0);
+	drawWindow();
 }
 
 Window::~Window()
@@ -67,7 +58,13 @@ Window::~Window()
 	wrefresh(_win);
 	delwin(_win);
 
+	wclear(_box);
+	wrefresh(_box);
+	delwin(_box);
+
+	_box = nullptr;
 	_win = nullptr;
+	_console = nullptr;
 }
 
 WINDOW* Window::getWIN() const
@@ -75,21 +72,40 @@ WINDOW* Window::getWIN() const
 	return _win;
 }
 
+Console* Window::getConsole() const
+{
+	return _console;
+}
+
 const int Window::getWidth() const
 {
 	return _w;
 }
 
-void Window::print(std::string strMsg)
+void Window::print(std::string strMsg, bool bCentered, int y, int x)
 {
-	wprintw(_win, strMsg.c_str());
+	if (y == -1)
+	{
+		y = getcury(_win);
+	}
+
+	if (x == -1)
+	{
+		x = getcurx(_win);
+	}
+
+	if (bCentered)
+	{
+		x = (_w - strMsg.length()) / 2;
+	}
+
+	mvwprintw(_win, y, x, strMsg.c_str());
 	this->refresh();
 }
 
 void Window::print(std::string strMsg, int y, int x)
 {
-	mvwprintw(_win, y, x, strMsg.c_str());
-	this->refresh();
+	print(strMsg, false, y, x);
 }
 
 const int Window::getHeight() const
@@ -97,28 +113,28 @@ const int Window::getHeight() const
 	return _h;
 }
 
-void Window::printColor(std::string strMsg, int nBgColor, int nFgColor)
+void Window::printColor(std::string strMsg, int nFgColor, int nBgColor, bool bCentered, int y, int x)
 {
-	int nColorPairIdx = _console->getColorPairIdx(nBgColor, nFgColor);
-	printColor(strMsg, nColorPairIdx);
+	int nColorPairIdx = _console->getColorPairIdx(nFgColor, nBgColor);
+	printColor(strMsg, nColorPairIdx, bCentered, y, x);
 }
 
-void Window::printColor(char c, int nBgColor, int nFgColor)
+void Window::printColor(char c, int nFgColor, int nBgColor, bool bCentered, int y, int x)
 {
 	std::string strMsg(1, c);
-	printColor(strMsg, nBgColor, nFgColor);
+	printColor(strMsg, nFgColor, nBgColor, bCentered, y, x);
 }
 
-void Window::printColor(std::string strMsg, int nColorPairIdx)
+void Window::printColor(std::string strMsg, int nColorPairIdx, bool bCentered, int y, int x)
 {
 	wattron(_win, COLOR_PAIR(nColorPairIdx));
-	wprintw(_win, strMsg.c_str());
+	print(strMsg, bCentered, y, x);
 	wattroff(_win, COLOR_PAIR(nColorPairIdx));
 
 	this->refresh();
 }
 
-void Window::printColor(char c, int nColorPairIdx)
+void Window::printColor(char c, int nColorPairIdx, bool bCentered, int y, int x)
 {
 	std::string strMsg(1, c);
 	printColor(strMsg, nColorPairIdx);
@@ -136,13 +152,8 @@ void Window::refresh()
 
 void Window::drawWindow()
 {
-	mvwprintw(_win, 0, (_w - _title.length()) / 2, _title.c_str());
-	this->refresh();
-}
-
-void Window::refreshBox()
-{
-	box(_win, 0, 0);
-	mvwprintw(_win, 0, (_w - _title.length()) / 2, _title.c_str());
+	box(_box, 0, 0);
+	mvwprintw(_box, 0, (_w + 2 - _title.length()) / 2, _title.c_str());
+	wrefresh(_box);
 	this->refresh();
 }

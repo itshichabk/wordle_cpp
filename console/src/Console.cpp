@@ -62,7 +62,7 @@ void Console::initColorPairs()
 }
 
 
-int Console::getColorPairIdx(int nBgColor, int nFgColor) const
+int Console::getColorPairIdx(int nFgColor, int nBgColor) const
 {
-	return _colorPairsIdx.at({ nBgColor, nFgColor });
+	return _colorPairsIdx.at({ nFgColor, nBgColor });
 }

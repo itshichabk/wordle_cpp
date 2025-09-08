@@ -3,9 +3,6 @@
 
 int main()
 {
-	//Game game;
-	//game.play();
-
 	Console console;
 	Game game(&console);
 

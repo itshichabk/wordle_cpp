@@ -31,15 +31,11 @@ private:
 	int  _nCurrentRound;
 	bool _bHasWon;
 
-	int _colorPairIdx[3];
-
 	void init();
-	void initConsole();
 	void getRandomWord();
 
 	void getInput();
 	void checkInput();
-	void colorInput();
 
 	void playRound();
 	void result();

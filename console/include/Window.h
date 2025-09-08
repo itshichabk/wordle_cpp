@@ -11,6 +11,7 @@
 class Window
 {
 protected:
+	WINDOW*  _box;
 	WINDOW*  _win;
 	Console* _console;
 
@@ -26,27 +27,25 @@ public:
 		   bool isCentered = false,
 		   int x = 0, int y = 0);
 
-	Window(const Window& win);
 	~Window();
 
 	WINDOW* getWIN() const;
+	Console* getConsole() const;
 
 	const int getHeight() const;
 	const int getWidth() const;
 
-	void print(std::string strMsg);
+	void print(std::string strMsg, bool bCentered = false, int y = - 1, int x = -1);
 	void print(std::string strMsg, int y, int x);
 
-	void printColor(std::string strMsg, int nBgColor, int nFgColor);
-	void printColor(char c, int nBgColor, int nFgColor);
+	void printColor(std::string strMsg, int nBgColor, int nFgColor, bool bCentered = false, int y = -1, int x = -1);
+	void printColor(char c, int nBgColor, int nFgColor, bool bCentered = false, int y = -1, int x = -1);
 
-	void printColor(std::string strMsg, int nColorPairIdx);
-	void printColor(char c, int nColorPairIdx);
+	void printColor(std::string strMsg, int nColorPairIdx, bool bCentered = false, int y = -1, int x = -1);
+	void printColor(char c, int nColorPairIdx, bool bCentered = false, int y = -1, int x = -1);
 
 	void move(int y, int x);
 	void refresh();
 
 	void drawWindow();
-
-	void refreshBox();
 };
