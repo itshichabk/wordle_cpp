@@ -11,16 +11,10 @@
 
 constexpr int  GAME_ROUNDS    = 6;
 constexpr int  GAME_CHARS     = 5;
-constexpr char GAME_API_URL[] = "https://random-word-api.vercel.app/api?words=1&length=5";
+constexpr char GAME_API_URL[] = "https://random-word-api.vercel.app/api?words=1&length=";
 
 class Game
 {
-public:
-	static const int nRounds;
-	static const int nCharacters;
-	
-	static const std::string strWordUrl;
-
 private:
 	Window _win;
 	Grid _grid;

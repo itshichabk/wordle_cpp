@@ -1,8 +1,8 @@
 #include "Game.h"
 
-const int Game::nRounds     = GAME_ROUNDS;
-const int Game::nCharacters = GAME_CHARS;
-const std::string Game::strWordUrl = GAME_API_URL;
+/*const int Game::GAME_ROUNDS     = GAME_ROUNDS;
+const int Game::GAME_CHARS = GAME_CHARS;
+const std::string Game::strWordUrl = GAME_API_URL;*/
 
 Game::Game(Console* console) : 
 	_win(console, "Wordle", GAME_ROUNDS + 3, 50, true),
@@ -24,7 +24,7 @@ Game::~Game()
 
 void Game::getRandomWord()
 {
-	HttpRequest req("https://random-word-api.vercel.app/api?words=1&length=5");
+	HttpRequest req(GAME_API_URL + std::to_string(GAME_CHARS));
 
 	if (req.getResultCode() == CURLcode::CURLE_OK)
 	{
@@ -32,7 +32,7 @@ void Game::getRandomWord()
 
 		if (req.getSuccess())
 		{
-			_strWord = req.getBuffer().substr(2, 5);
+			_strWord = req.getBuffer().substr(2, GAME_CHARS);
 		}
 	}
 }
@@ -43,19 +43,19 @@ void Game::getInput()
 
 	do
 	{
-		wgetnstr(_win.getWIN(), _strInput, nCharacters);
+		wgetnstr(_win.getWIN(), _strInput, GAME_CHARS);
 
-		if (strlen(_strInput) != nCharacters)
+		if (strlen(_strInput) != GAME_CHARS)
 		{
 			_grid.printRow(_nCurrentRound);
 		}
 	}
-	while (strlen(_strInput) != nCharacters);
+	while (strlen(_strInput) != GAME_CHARS);
 }
 
 void Game::checkInput()
 {
-	for (int i = 0; i < nCharacters; i++)
+	for (int i = 0; i < GAME_CHARS; i++)
 	{
 		if (_strWord[i] == _strInput[i])
 		{
@@ -63,7 +63,7 @@ void Game::checkInput()
 		}
 		else
 		{
-			for (int j = 0; j < nCharacters; j++)
+			for (int j = 0; j < GAME_CHARS; j++)
 			{
 				if (_strWord[j] == _strInput[i])
 				{
@@ -79,7 +79,7 @@ void Game::checkInput()
 
 void Game::init()
 {
-	_strInput = new char[nCharacters + 1];
+	_strInput = new char[GAME_CHARS + 1];
 	_bHasWon = false;
 	_nCurrentRound = 0;
 }
@@ -90,13 +90,14 @@ void Game::play()
 
 	if (_strWord.empty())
 	{
-		_win.printColor("Error when fetching random word.\nThe game cannot continue.", COLOR_BLACK, COLOR_RED);
+		_win.printColor("Error when fetching random word.", COLOR_WHITE, COLOR_RED, true, 0);
+		_win.printColor("The game cannot continue.", COLOR_WHITE, COLOR_RED, true, 1);
 	}
 	else
 	{
 		_grid.print();
 
-		for (_nCurrentRound = 0; _nCurrentRound < nRounds; _nCurrentRound++)
+		for (_nCurrentRound = 0; _nCurrentRound < GAME_ROUNDS; _nCurrentRound++)
 		{
 			playRound();
 

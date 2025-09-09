@@ -18,6 +18,10 @@ project ("wordle")
 
 set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 
+if (LINUX)
+	add_definitions(-Wno-format-security)
+endif()
+
 # Ajoutez une source à l'exécutable de ce projet.
 add_executable (wordle "main.cpp" "console/include/Console.h" "console/src/Console.cpp")
 

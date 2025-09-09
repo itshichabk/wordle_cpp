@@ -10,13 +10,13 @@ Grid::Grid(Window* win)
 	_colorPairIdx[1] = win->getConsole()->getColorPairIdx(COLOR_BLACK, COLOR_YELLOW);
 	_colorPairIdx[2] = win->getConsole()->getColorPairIdx(COLOR_BLACK, COLOR_GREEN);
 
-	_pnGrid = new int* [Game::nRounds];
+	_pnGrid = new int* [GAME_ROUNDS];
 
-	for (int i = 0; i < Game::nRounds; i++)
+	for (int i = 0; i < GAME_ROUNDS; i++)
 	{
-		_pnGrid[i] = new int[Game::nCharacters];
+		_pnGrid[i] = new int[GAME_CHARS];
 
-		for (int j = 0; j < Game::nCharacters; j++)
+		for (int j = 0; j < GAME_CHARS; j++)
 		{
 			_pnGrid[i][j] = Grid::INCORRECT;
 		}
@@ -25,7 +25,7 @@ Grid::Grid(Window* win)
 
 Grid::~Grid()
 {
-	for (int i = 0; i < Game::nRounds; i++)
+	for (int i = 0; i < GAME_ROUNDS; i++)
 	{
 		delete[] _pnGrid[i];
 	}
@@ -35,7 +35,7 @@ Grid::~Grid()
 
 void Grid::print()
 {
-	for (int i = 0; i < Game::nRounds; i++)
+	for (int i = 0; i < GAME_ROUNDS; i++)
 	{
 		printRow(i);
 	}
@@ -45,7 +45,7 @@ void Grid::printRow(int nRow)
 {
 	moveToRow(nRow);
 
-	for (int j = 0; j < Game::nCharacters; j++)
+	for (int j = 0; j < GAME_CHARS; j++)
 	{
 		_pWin->print("_");
 	}
@@ -58,7 +58,7 @@ void Grid::printInputColor(std::string strWord, int nRow)
 {
 	moveToRow(nRow);
 
-	for (int i = 0; i < Game::nCharacters; i++)
+	for (int i = 0; i < GAME_CHARS; i++)
 	{
 		int nValue = (*this)[nRow][i];
 		_pWin->printColor(strWord[i], _colorPairIdx[nValue]);
@@ -67,7 +67,7 @@ void Grid::printInputColor(std::string strWord, int nRow)
 
 void Grid::moveToRow(int nRow)
 {
-	int x = (_pWin->getWidth() - Game::nCharacters) / 2;
+	int x = (_pWin->getWidth() - GAME_CHARS) / 2;
 	_pWin->move(nRow, x);
 }
 
@@ -75,7 +75,7 @@ bool Grid::isRowCorrect(int nRow)
 {
 	int nCorrectCharacters = 0;
 
-	for (int i = 0; i < Game::nCharacters; i++)
+	for (int i = 0; i < GAME_CHARS; i++)
 	{
 		if (_pnGrid[nRow][i] == Grid::CORRECT)
 		{
@@ -83,7 +83,7 @@ bool Grid::isRowCorrect(int nRow)
 		}
 	}
 
-	return (nCorrectCharacters == Game::nCharacters);
+	return (nCorrectCharacters == GAME_CHARS);
 }
 
 int* Grid::operator[](int nRow)
