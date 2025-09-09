@@ -6,7 +6,7 @@ A cross-platform Wordle game clone in C++ with libcurl and (PD)curses!
 
 The viral New York Times game is now playable in your terminal! Can you guess the secret word before running out of tries?
 
-Words are dynamically fetched using @mcnaveen's [Random Words API](https://github.com/mcnaveen/Random-Words-API)!
+The game works on both Windows and Linux (tested on Ubuntu). Words are dynamically fetched using @mcnaveen's [Random Words API](https://github.com/mcnaveen/Random-Words-API)!
 
 ---
 
