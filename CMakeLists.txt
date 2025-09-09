@@ -26,18 +26,6 @@ endif()
 add_executable (wordle "main.cpp" "console/include/Console.h" "console/src/Console.cpp")
 
 FetchContent_Declare(
-	miniaudio
-	GIT_REPOSITORY https://github.com/mackron/miniaudio.git
-	GIT_TAG        350784a9467a79d0fa65802132668e5afbcf3777
-)
-
-FetchContent_Declare(
-	nlohmann_json
-	GIT_REPOSITORY https://github.com/nlohmann/json.git
-	GIT_TAG        55f93686c01528224f448c19128836e7df245f72
-)
-
-FetchContent_Declare(
 	pdcurses
 	GIT_REPOSITORY https://github.com/scivision/PDCurses.git
 	GIT_TAG        743ba4cf0f14c3f416934b11e3c22702068d260b
@@ -49,7 +37,7 @@ FetchContent_Declare(
 )
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(miniaudio nlohmann_json googletest)
+FetchContent_MakeAvailable(googletest)
 
 set(CURSES_WIN   pdcurses)
 set(CURSES_LINUX ncursesw)
@@ -82,8 +70,7 @@ add_subdirectory(game)
 add_subdirectory(network)
 
 set(LINK_LIBS_COMMON 
-		lib_console lib_game lib_network
-		miniaudio nlohmann_json::nlohmann_json)
+		lib_console lib_game lib_network)
 
 list(APPEND LINK_LIBS ${LINK_LIBS_COMMON} ${CURSES})
 target_link_libraries(wordle ${LINK_LIBS})
@@ -91,5 +78,3 @@ target_link_libraries(wordle ${LINK_LIBS})
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET wordle PROPERTY CXX_STANDARD 20)
 endif()
-
-# TODO: Ajoutez des tests et installez des cibles si nécessaire.
