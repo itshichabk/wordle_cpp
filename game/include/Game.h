@@ -20,7 +20,7 @@ private:
 	Grid _grid;
 
 	std::string _strWord;
-	char* _strInput;
+	std::string _strInput;
 
 	int  _nCurrentRound;
 	bool _bHasWon;
@@ -39,6 +39,4 @@ public:
 	~Game();
 
 	void play();
-
-	std::string getWord() const;
 };

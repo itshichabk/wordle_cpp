@@ -29,7 +29,6 @@ public:
 
 	~Window();
 
-	WINDOW* getWIN() const;
 	Console* getConsole() const;
 
 	const int getHeight() const;
@@ -44,7 +43,11 @@ public:
 	void printColor(std::string strMsg, int nColorPairIdx, bool bCentered = false, int y = -1, int x = -1);
 	void printColor(char c, int nColorPairIdx, bool bCentered = false, int y = -1, int x = -1);
 
+	char getChar();
+	void addChar(char c);
+
 	void move(int y, int x);
+	void moveOffset(int y, int x);
 	void refresh();
 
 	void drawWindow();

@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Grid.h"
 #include "Window.h"
 #include "Game.h"
@@ -65,10 +66,61 @@ void Grid::printInputColor(std::string strWord, int nRow)
 	}
 }
 
-void Grid::moveToRow(int nRow)
+std::string Grid::readInput(int nRound)
+{
+	int nTypedChars = 0;
+	char cInput = 0;
+
+	std::string strInput(GAME_CHARS, ' ');
+
+	moveToRow(nRound);
+
+	do
+	{
+		cInput = _pWin->getChar();
+
+		if (cInput == '\n')
+		{
+			break;
+		}
+		else if (cInput == '\b' && nTypedChars > 0)
+		{
+			strInput[nTypedChars] = ' ';
+
+			_pWin->moveOffset(0, -1);
+			_pWin->addChar('_');
+			_pWin->moveOffset(0, -1);
+
+			nTypedChars--;
+		}
+		else if (nTypedChars < GAME_CHARS)
+		{
+			if ((cInput > 64 && cInput < 91) || (cInput > 96 && cInput < 123))
+			{
+				if (cInput > 96 && cInput < 123)
+				{
+					cInput = std::toupper(cInput);
+				}
+
+				strInput[nTypedChars] = cInput;
+				_pWin->addChar(cInput);
+
+				nTypedChars++;
+			}
+		}
+
+		_pWin->refresh();
+
+	} while (cInput != KEY_ENTER);
+
+	strInput.erase(std::remove(strInput.begin(), strInput.end(), ' '), strInput.end());
+	return strInput;
+}
+
+void Grid::moveToRow(int nRow, int nCol)
 {
 	int x = (_pWin->getWidth() - GAME_CHARS) / 2;
-	_pWin->move(nRow, x);
+	_pWin->move(nRow, x + nCol);
 }
 
 bool Grid::isRowCorrect(int nRow)

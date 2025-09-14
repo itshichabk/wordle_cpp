@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Game.h"
 
 /*const int Game::GAME_ROUNDS     = GAME_ROUNDS;
@@ -17,7 +18,6 @@ Game::~Game()
 	endwin();
 
 	_strWord = "";
-	delete _strInput;
 
 	_bHasWon = false;
 }
@@ -33,24 +33,23 @@ void Game::getRandomWord()
 		if (req.getSuccess())
 		{
 			_strWord = req.getBuffer().substr(2, GAME_CHARS);
+			std::transform(_strWord.begin(), _strWord.end(), _strWord.begin(), ::toupper);
 		}
 	}
 }
 
 void Game::getInput()
 {
-	_grid.moveToRow(_nCurrentRound);
-
 	do
 	{
-		wgetnstr(_win.getWIN(), _strInput, GAME_CHARS);
+		_strInput = _grid.readInput(_nCurrentRound);
 
-		if (strlen(_strInput) != GAME_CHARS)
+		if (_strInput.length() != GAME_CHARS)
 		{
 			_grid.printRow(_nCurrentRound);
 		}
 	}
-	while (strlen(_strInput) != GAME_CHARS);
+	while (_strInput.length() != GAME_CHARS);
 }
 
 void Game::checkInput()
@@ -79,7 +78,6 @@ void Game::checkInput()
 
 void Game::init()
 {
-	_strInput = new char[GAME_CHARS + 1];
 	_bHasWon = false;
 	_nCurrentRound = 0;
 }
@@ -110,7 +108,7 @@ void Game::play()
 		result();
 	}
 
-	wgetch(_win.getWIN());
+	_win.getChar();
 }
 
 void Game::playRound()
@@ -136,12 +134,6 @@ void Game::result()
 	else
 	{
 		_win.print("You lost... the word was:", true, _win.getHeight() - 2);
-		_win.printColor(_strWord.c_str(), COLOR_WHITE, COLOR_RED, true, _win.getHeight() - 1);
+		_win.printColor(_strWord, COLOR_BLACK, COLOR_RED, true, _win.getHeight() - 1);
 	}
-
-}
-
-std::string Game::getWord() const
-{
-	return _strWord;
 }

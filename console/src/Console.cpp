@@ -1,5 +1,6 @@
 #include "Console.h"
 #include "Grid.h"
+#include "Game.h"
 
 const int Console::nRows = CON_ROWS;
 const int Console::nCols = CON_COLS;
@@ -9,25 +10,12 @@ void Console::init()
 	initscr();
 	start_color();
 	resize_term(25, 80);
+	noecho();
 
 	initColorPairs();
-
-	/*int nRedGreenIdx    = getColorPairIdx(COLOR_RED, COLOR_GREEN);
-	int nWhiteBlackIdx  = getColorPairIdx(COLOR_WHITE, COLOR_BLACK);
-	int nYellowCyanIdx  = getColorPairIdx(COLOR_YELLOW, COLOR_CYAN);
-	int nBlueMagentaIdx = getColorPairIdx(COLOR_BLUE, COLOR_MAGENTA);
-
-	int nColorPairs[] = { nRedGreenIdx, nWhiteBlackIdx, nYellowCyanIdx, nBlueMagentaIdx };
-
-	for (int i = 0; i < 4; i++)
-	{
-		printColor("HELLO\n", nColorPairs[i]);
-	}
-
-	getch();*/
 }
 
-Console::Console()// : _winMain(this)
+Console::Console()
 {
 	init();
 }

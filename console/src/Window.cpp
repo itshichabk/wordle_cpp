@@ -1,4 +1,6 @@
 #include "Window.h"
+#include "Window.h"
+#include "Window.h"
 
 Window::Window(Console* console, std::string title, int h, int w, bool isCentered, int x, int y)
 {
@@ -43,6 +45,8 @@ Window::Window(Console* console, std::string title, int h, int w, bool isCentere
 		_win = newwin(h, w, y, x);
 	}
 
+	keypad(_win, true);
+
 	drawWindow();
 }
 
@@ -65,11 +69,6 @@ Window::~Window()
 	_box = nullptr;
 	_win = nullptr;
 	_console = nullptr;
-}
-
-WINDOW* Window::getWIN() const
-{
-	return _win;
 }
 
 Console* Window::getConsole() const
@@ -140,9 +139,29 @@ void Window::printColor(char c, int nColorPairIdx, bool bCentered, int y, int x)
 	printColor(strMsg, nColorPairIdx);
 }
 
+char Window::getChar()
+{
+	return wgetch(_win);
+}
+
+void Window::addChar(char c)
+{
+	waddch(_win, c);
+}
+
 void Window::move(int y, int x)
 {
 	wmove(_win, y, x);
+}
+
+void Window::moveOffset(int y, int x)
+{
+	int nCurY = 0,
+		nCurX = 0;
+
+	getyx(_win, nCurY, nCurX);
+
+	move(nCurY + y, nCurX + x);
 }
 
 void Window::refresh()
