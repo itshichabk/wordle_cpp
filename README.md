@@ -18,7 +18,7 @@ It also serves as a starting point for a bigger upcoming console app project, wh
 
 ### To do:
 
-- [ ] Fix case sensitivity
+- [x] Fix case sensitivity
 - [ ] Only allow actual words (no random gibberish)
 - [ ] Menu / splash screen
 - [ ] Game stats?
